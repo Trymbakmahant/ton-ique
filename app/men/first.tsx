@@ -1,19 +1,14 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
 import { CiCircleInfo } from "react-icons/ci";
 
-interface IFirstPage {
-  amount: string;
-  setAmount: React.Dispatch<React.SetStateAction<string>>;
-  setTab: React.Dispatch<
-    React.SetStateAction<"first" | "second" | "third" | "last" | "book">
-  >;
-}
+export default function BudgetPage() {
+  const [amount, setAmount] = useState("");
 
-export default function BudgetPage({ amount, setAmount, setTab }: IFirstPage) {
   const handleProceed = () => {
-    setTab("second");
+    alert(`Budget set to: ${amount}`);
   };
 
   return (
@@ -36,7 +31,7 @@ export default function BudgetPage({ amount, setAmount, setTab }: IFirstPage) {
           type="text"
           placeholder="Enter amount e.g. $ 10,000"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)} // This should work if setAmount is passed correctly
+          onChange={(e) => setAmount(e.target.value)}
           className="w-full px-4 py-3 border rounded-md text-gray-800 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
         />
         <button

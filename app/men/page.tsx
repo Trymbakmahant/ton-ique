@@ -10,11 +10,12 @@ const First = () => {
   const [tab, setTab] = useState<
     "first" | "second" | "third" | "last" | "book"
   >("first");
-  const HandleFirstPage = () => {};
-  const HandleSecond = () => {};
-  const HandleThird = () => {};
-  const HandleBook = () => {};
-  const HandleLast = () => {};
+  //   const [amount, setAmount] = useState<>("");
+  //   const HandleFirstPage = () => {};
+  //   const HandleSecond = () => {};
+  //   const HandleThird = () => {};
+  //   const HandleBook = () => {};
+  //   const HandleLast = () => {};
   return (
     <div>
       {tab == "first" && <FirstPage />}
