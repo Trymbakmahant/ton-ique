@@ -6,34 +6,23 @@ import SecondPage from "./second";
 import Thirdpage from "./third";
 import BookTablePage from "./booktable";
 import LastPage from "./last";
-import BackButton from "@/components/backbutton";
+
 const First = () => {
   const [tab, setTab] = useState<number>(1);
 
-  function updateTab(tab: number) {
-    setTab(tab);
+  function forwardTab() {
+    setTab((prev) => prev + 1);
+  }
+  function backTab() {
+    setTab((prev) => prev - 1);
   }
   return (
     <div>
-      {tab == 1 && <FirstPage updateTab={updateTab} />}
-      {tab == 2 && <SecondPage updateTab={updateTab} />}
-      {tab == 3 && <Thirdpage />}
-      {tab == 4 && <LastPage />}
-      {tab == 5 && <BookTablePage />}
-
-      <div className="flex gap-6   flex-col">
-        {tab != 1 ? (
-          <button
-            onClick={() => {
-              setTab(1);
-            }}
-          >
-            first
-          </button>
-        ) : (
-          <BackButton />
-        )}
-      </div>
+      {tab == 1 && <FirstPage forwardTab={forwardTab} />}
+      {tab == 2 && <SecondPage forwardTab={forwardTab} backTab={backTab} />}
+      {tab == 3 && <Thirdpage forwardTab={forwardTab} backTab={backTab} />}
+      {tab == 5 && <LastPage />}
+      {tab == 4 && <BookTablePage backTab={backTab} forwardTab={forwardTab} />}
     </div>
   );
 };

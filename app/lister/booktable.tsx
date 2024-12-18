@@ -4,17 +4,32 @@ import Image from "next/image";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { ChevronsLeft } from "lucide-react";
 
-export default function BudgetPage() {
+type BookTablePageProps = {
+  backTab: () => void;
+  forwardTab: () => void;
+};
+export default function BudgetPage({
+  backTab,
+  forwardTab,
+}: BookTablePageProps) {
   const [amount, setAmount] = useState("");
 
   const handleProceed = () => {
     alert(`Budget set to: ${amount}`);
+    forwardTab();
   };
 
   return (
     <div className="min-h-screen flex flex-col justify-center gap-10 items-center bg-white px-6 py-8">
       {/* Icon and Title */}
+      <ChevronsLeft
+        size={32}
+        color="gray"
+        onClick={() => backTab()}
+        className="cursor-pointer absolute  border-2 border-gray-300  rounded-full top-4 left-4"
+      />
       <div className="flex flex-col items-center space-y-4">
         <h1 className="text-4xl text-center font-bold text-gray-800">
           Excellent choice , Sir !

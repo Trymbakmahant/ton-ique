@@ -5,11 +5,22 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import { ChevronsLeft } from "lucide-react";
 
-export default function Third() {
+type ThirdPageProps = {
+  forwardTab: () => void;
+  backTab: () => void;
+};
+export default function Third({ forwardTab, backTab }: ThirdPageProps) {
   return (
     <div className="min-h-screen flex flex-col justify-between items-center bg-white px-6 py-8">
       {/* Progress Indicator */}
+      <ChevronsLeft
+        size={32}
+        color="gray"
+        onClick={() => backTab()}
+        className="cursor-pointer absolute  border-2 border-gray-300  rounded-full top-4 left-4"
+      />
       <div className="text-gray-400 text-4xl font-medium">
         {"3"}
         <span className="text-gray-200">/3</span>
@@ -43,7 +54,13 @@ export default function Third() {
           <div>+$300</div>
         </div>
         <div className="text-gray-300 flex justify-center">
-          <Image src="/images/bottomstand.png" alt="" width={50} height={100} />
+          <Image
+            onClick={() => forwardTab()}
+            src="/images/bottomstand.png"
+            alt=""
+            width={50}
+            height={100}
+          />
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import BackButton from "@/components/backbutton";
 import Image from "next/image";
 import { useState } from "react";
 import { CiCircleInfo } from "react-icons/ci";
@@ -9,20 +10,20 @@ interface FirstPage {
 }
 
 type FirstPageProps = {
-  updateTab: (tab: number) => void;
+  forwardTab: () => void;
 };
 
-export const FirstPage: React.FC<FirstPageProps> = ({ updateTab }) => {
+export const FirstPage: React.FC<FirstPageProps> = ({ forwardTab }) => {
   const [amount, setAmount] = useState("");
 
   const handleProceed = () => {
-    alert(`Budget set to: ${amount}`);
-    updateTab(2);
+    forwardTab();
   };
 
   return (
     <div className="min-h-screen flex flex-col justify-between items-center bg-white px-6 py-8">
       {/* Progress Indicator */}
+      <BackButton />
       <div className="text-gray-400 text-4xl font-medium">
         {"1"}
         <span className="text-gray-200">/3</span>

@@ -12,7 +12,7 @@ const BackButton = () => {
         size={32}
         color="gray"
         onClick={() => router.back()}
-        className="cursor-pointer"
+        className="cursor-pointer absolute  border-2 border-gray-300  rounded-full top-4 left-4"
       />
     </div>
   );

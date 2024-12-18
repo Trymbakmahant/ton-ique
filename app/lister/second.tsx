@@ -14,19 +14,27 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { ChevronsLeft } from "lucide-react";
 
 type FirstPageProps = {
-  updateTab: (tab: number) => void;
+  forwardTab: () => void;
+  backTab: () => void;
 };
 
-const SecondPage: React.FC<FirstPageProps> = ({ updateTab }) => {
+const SecondPage: React.FC<FirstPageProps> = ({ forwardTab, backTab }) => {
   return (
     <div className="min-h-screen flex flex-col justify-between items-center bg-white px-6 py-8">
       {/* Progress Indicator */}
+      <ChevronsLeft
+        size={32}
+        color="gray"
+        onClick={() => backTab()}
+        className="cursor-pointer absolute  border-2 border-gray-300  rounded-full top-4 left-4"
+      />
       <div className="text-gray-400 text-lg font-medium">2/3</div>
 
       {/* Icon and Title */}
-      <div onClick={() => updateTab(3)} className="flex flex-col items-center ">
+      <div className="flex flex-col items-center ">
         <Image
           src="/images/secondpage.png" // Replace with actual image path
           alt="Location"
@@ -120,7 +128,10 @@ const SecondPage: React.FC<FirstPageProps> = ({ updateTab }) => {
         <button className="w-1/2 py-3 rounded-full border border-gray-400 text-gray-700 font-medium hover:bg-gray-100">
           No
         </button>
-        <button className="w-1/2 py-3 rounded-full bg-black text-white font-medium hover:bg-gray-800">
+        <button
+          onClick={() => forwardTab()}
+          className="w-1/2 py-3 rounded-full bg-black text-white font-medium hover:bg-gray-800"
+        >
           Yes
         </button>
       </div>
