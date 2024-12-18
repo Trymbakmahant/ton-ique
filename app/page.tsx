@@ -2,9 +2,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { mockLocalInitData, TelegramInitData } from "../utils/mockTelegramData";
+import UserTypeSelection from "../components/ui/Landing/Tabs";
 
 export default function TelegramInitDataPage() {
   const [initData, setInitData] = useState<TelegramInitData | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [debugInfo, setDebugInfo] = useState<{
     telegramWebAppExists: boolean;
     windowObjectExists: boolean;
@@ -18,6 +20,33 @@ export default function TelegramInitDataPage() {
     webAppReady: false,
     initDataAvailable: false,
   });
+  console.log(initData, debugInfo);
+  const authenticateUser = async (data: TelegramInitData) => {
+    try {
+      const response = await fetch("/api/auth/telegram", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          initData: data,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Authentication failed");
+      }
+
+      const authResult = await response.json();
+      setIsAuthenticated(true);
+      // You might want to store the token or user data
+      return authResult;
+    } catch (error) {
+      console.error("Authentication error:", error);
+      setIsAuthenticated(false);
+      // Handle authentication error (maybe show a message to user)
+    }
+  };
 
   useEffect(() => {
     // Debug: Check window and Telegram availability
@@ -55,30 +84,30 @@ export default function TelegramInitDataPage() {
         const tgWebApp = (window as any).Telegram?.WebApp;
 
         if (tgWebApp) {
-          // Explicitly call ready method
           tgWebApp.ready();
-
-          // Update debug info
           setDebugInfo((prev) => ({
             ...prev,
             webAppReady: true,
             initDataAvailable: !!tgWebApp.initData,
           }));
 
-          // Extract and set init data
           if (tgWebApp.initData) {
-            console.log("Raw Telegram Init Data:", tgWebApp.initData);
-
             try {
-              // Try parsing if it's a JSON string
-              const parsedInitData =
-                typeof tgWebApp.initData === "string"
-                  ? JSON.parse(tgWebApp.initData)
-                  : tgWebApp.initData;
+              const searchParams = new URLSearchParams(tgWebApp.initData);
+              const parsedData: Record<string, any> = {};
+              searchParams.forEach((value, key) => {
+                try {
+                  parsedData[key] = JSON.parse(decodeURIComponent(value));
+                } catch {
+                  parsedData[key] = decodeURIComponent(value);
+                }
+              });
 
-              setInitData(parsedInitData);
-            } catch (parseError) {
-              console.error("Error parsing init data:", parseError);
+              setInitData(parsedData);
+              // Call authentication immediately after parsing initData
+              authenticateUser(parsedData);
+            } catch (error) {
+              console.error("Error parsing init data:", error);
               setInitData(mockLocalInitData);
             }
           } else {
@@ -97,45 +126,8 @@ export default function TelegramInitDataPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-telegram-blue flex items-center justify-center p-4">
-      <div className="bg-white p-8 rounded-lg shadow-xl max-w-2xl w-full">
-        <h1 className="text-2xl font-bold mb-4">
-          Telegram Init Data Diagnostics
-        </h1>
-
-        {/* Debug Information */}
-        <div className="bg-gray-100 p-4 rounded mb-4">
-          <h2 className="font-bold mb-2">Debug Information:</h2>
-          <pre className="text-xs">{JSON.stringify(debugInfo, null, 2)}</pre>
-        </div>
-
-        {/* Init Data Display */}
-        {initData ? (
-          <div className="space-y-4">
-            <div className="bg-green-100 p-4 rounded">
-              <h2 className="font-bold mb-2">Parsed Init Data:</h2>
-              <pre className="text-xs">{JSON.stringify(initData, null, 2)}</pre>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-red-100 p-4 rounded">
-            <p className="text-red-800">No Telegram Init Data Available</p>
-          </div>
-        )}
-
-        {/* Troubleshooting Instructions */}
-        <div className="mt-4 bg-yellow-100 p-4 rounded">
-          <h2 className="font-bold mb-2">Troubleshooting Tips:</h2>
-          <ul className="list-disc list-inside text-sm">
-            <li>
-              Ensure you&apos;re running this in a Telegram Mini App context
-            </li>
-            <li>Verify Telegram WebApp script is loaded correctly</li>
-            <li>Check browser console for any errors</li>
-            <li>Confirm your bot is configured correctly in BotFather</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    <>
+      {!isAuthenticated ? <UserTypeSelection /> : <div>Authenticating...</div>}
+    </>
   );
 }

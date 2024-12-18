@@ -4,11 +4,20 @@ import Image from "next/image";
 import { useState } from "react";
 import { CiCircleInfo } from "react-icons/ci";
 
-export default function BudgetPage() {
+interface FirstPage {
+  changeTab: () => void;
+}
+
+type FirstPageProps = {
+  updateTab: (tab: number) => void;
+};
+
+export const FirstPage: React.FC<FirstPageProps> = ({ updateTab }) => {
   const [amount, setAmount] = useState("");
 
   const handleProceed = () => {
     alert(`Budget set to: ${amount}`);
+    updateTab(2);
   };
 
   return (
@@ -64,4 +73,4 @@ export default function BudgetPage() {
       </div>
     </div>
   );
-}
+};

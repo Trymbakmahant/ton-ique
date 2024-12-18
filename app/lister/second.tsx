@@ -15,14 +15,18 @@ import {
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 
-export default function LocationPage() {
+type FirstPageProps = {
+  updateTab: (tab: number) => void;
+};
+
+const SecondPage: React.FC<FirstPageProps> = ({ updateTab }) => {
   return (
     <div className="min-h-screen flex flex-col justify-between items-center bg-white px-6 py-8">
       {/* Progress Indicator */}
       <div className="text-gray-400 text-lg font-medium">2/3</div>
 
       {/* Icon and Title */}
-      <div className="flex flex-col items-center ">
+      <div onClick={() => updateTab(3)} className="flex flex-col items-center ">
         <Image
           src="/images/secondpage.png" // Replace with actual image path
           alt="Location"
@@ -122,4 +126,5 @@ export default function LocationPage() {
       </div>
     </div>
   );
-}
+};
+export default SecondPage;
