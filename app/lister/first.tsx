@@ -1,6 +1,8 @@
 "use client";
 
 import BackButton from "@/components/backbutton";
+import { TonConnectCustomButton } from "@/components/ui/TonConnectCustomButton";
+import { TonConnectButton, useTonWallet } from "@tonconnect/ui-react";
 import Image from "next/image";
 import { useState } from "react";
 import { CiCircleInfo } from "react-icons/ci";
@@ -19,7 +21,7 @@ export const FirstPage: React.FC<FirstPageProps> = ({ forwardTab }) => {
   const handleProceed = () => {
     forwardTab();
   };
-
+  const wallet = useTonWallet();
   return (
     <div className="min-h-screen flex flex-col justify-between items-center bg-white px-6 py-8">
       {/* Progress Indicator */}
@@ -28,7 +30,11 @@ export const FirstPage: React.FC<FirstPageProps> = ({ forwardTab }) => {
         {"1"}
         <span className="text-gray-200">/3</span>
       </div>
-
+      {wallet?.account && (
+        <div className="text-gray-400 text-sm fixed top-4 right-4">
+          <TonConnectButton />
+        </div>
+      )}
       {/* Icon and Title */}
       <div className="flex flex-col items-center space-y-4">
         <Image src="/images/menFirst.png" alt="" width={100} height={100} />
@@ -44,17 +50,21 @@ export const FirstPage: React.FC<FirstPageProps> = ({ forwardTab }) => {
           onChange={(e) => setAmount(e.target.value)}
           className="w-full px-4 py-3 border rounded-md text-gray-800 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-500"
         />
-        <button
-          onClick={handleProceed}
-          disabled={!amount}
-          className={`w-full py-3 rounded-md font-medium shadow-sm ${
-            amount
-              ? "bg-black text-white hover:bg-gray-800"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
-        >
-          Proceed
-        </button>
+        {!wallet?.account ? (
+          <TonConnectCustomButton className="w-full" />
+        ) : (
+          <button
+            onClick={handleProceed}
+            disabled={!amount}
+            className={`w-full py-3 rounded-md font-medium shadow-sm ${
+              amount
+                ? "bg-black text-white hover:bg-gray-800"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            Proceed
+          </button>
+        )}
       </div>
 
       {/* Recommendation and Icon */}
